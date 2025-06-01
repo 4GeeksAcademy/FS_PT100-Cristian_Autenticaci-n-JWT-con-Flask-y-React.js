@@ -12,10 +12,48 @@ userServices.register = async (formData) => {
     });
     if (!resp.ok) throw Error("something went wrong");
     const data = await resp.json();
+    localStorage.setItem("token", data.token)
     return data;
   } catch (error) {
     console.log(error);
   }
 };
+
+userServices.login = async (formData) => {
+  try {
+    const resp = await fetch(backendUrl + "/api/login", {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    });
+    if (!resp.ok) throw Error("something went wrong");
+    const data = await resp.json();
+    localStorage.setItem("token", data.token)
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+userServices.getUserInfo = async () => {
+     try {
+    const resp = await fetch(backendUrl + "/api/private", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            // authorization con el token SIEMPRE que el endpoint tenga @JWT_REQUIRED
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+    });
+    if (!resp.ok) throw Error("something went wrong");
+    const data = await resp.json();
+    console.log(data)
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export default userServices;
