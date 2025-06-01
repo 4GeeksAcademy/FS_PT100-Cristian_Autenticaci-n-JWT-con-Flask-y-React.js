@@ -100,13 +100,16 @@ def login():
         return jsonify({"error": "something went wrong"}), 400
 
 # ruta protegida
-
-
 @api.route('/private', methods=['GET'])
 @jwt_required()
 def get_user_inf():
     try:
         id = get_jwt_identity()
-        return jsonify({"id": id})
+        stm = select(User).where(User.id == id)
+        user = db.session.execute(stm).scalar_one_or_none()
+        if not user:
+            return jsonify({"msg": "what tha hell?"}), 418
+        return jsonify(user.serialize())
     except Exception as e:
+        print(e)
         return jsonify({"error": "something went wrong"})

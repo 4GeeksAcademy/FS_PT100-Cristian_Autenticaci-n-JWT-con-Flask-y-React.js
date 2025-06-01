@@ -43,7 +43,6 @@ userServices.getUserInfo = async () => {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            // authorization con el token SIEMPRE que el endpoint tenga @JWT_REQUIRED
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
     });
