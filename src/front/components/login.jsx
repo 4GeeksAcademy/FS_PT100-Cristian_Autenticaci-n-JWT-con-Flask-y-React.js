@@ -30,6 +30,5 @@ export const Login = () => {
             <input placeholder="password" name="password" value={formData.password} onChange={handleChange} type="password" />
             <input type="submit" />
         </form>
-
     )
 }
