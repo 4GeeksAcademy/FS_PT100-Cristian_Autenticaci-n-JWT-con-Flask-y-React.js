@@ -1,25 +1,28 @@
 import { useState } from "react"
 import userServices from "../services/userServices"
 import useGlobalReducer from "../hooks/useGlobalReducer"
+import { useNavigate } from "react-router-dom"
 
 export const Register = () => {
-const {store, dispatch} = useGlobalReducer()
-const [formData, setFormData] = useState ({
- email: "",
- password: ""   
-})
+    const { store, dispatch } = useGlobalReducer()
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    })
 
-const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value})
-}
+    const navigate = useNavigate()
 
-const handleSubmit = e => { 
-    e.preventDefauld();
-    console.log(formData);
-    userServices.login(formData).then(data => console.log(data))
-}
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
+    }
 
-    return(
+    const handleSubmit = e => {
+        e.preventDefault();
+        console.log(formData)
+        userServices.register(formData).then(data => data.success && navigate('/login'))
+    }
+
+    return (
         <form onSubmit={handleSubmit}>
             <h2>Register</h2>
             <input placeholder="email" name="email" value={formData.email} onChange={handleChange} type="email" />

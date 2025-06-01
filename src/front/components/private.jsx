@@ -18,9 +18,7 @@ export const Private = () => {
             localStorage.setItem('user', JSON.stringify(data))
             dispatch({ type: 'get_user_info', payload: data })
         })
-
     }, [])
-
 
     const handleLogout = () => {
         dispatch({ type: 'logout' })
@@ -29,9 +27,8 @@ export const Private = () => {
 
     return (
         <>
-            <h2>this is private!!!!</h2>
+            <h2>This is private!!</h2>
             <h3>{store.user?.email}</h3>
-
             <button onClick={handleLogout}>logout</button>
         </>
     )

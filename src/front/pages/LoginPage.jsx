@@ -6,7 +6,7 @@ export const LoginPage = () => {
     return (
         <>
         <Login/>
-        <Link to='/register'>Need a account?</Link>
+        <Link to='/register'>Need an account?</Link>
         </>
     )
 }

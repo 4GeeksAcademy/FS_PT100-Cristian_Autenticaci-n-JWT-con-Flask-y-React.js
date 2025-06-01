@@ -8,21 +8,18 @@ import userServices from "../services/userServices.js";
 
 export const Home = () => {
 
-	const { store, dispatch } = useGlobalReducer()
+	const navigate = useNavigate()
 
-	const handleClick = () => {
-		userServices.getUserInfo().then(data => console.log('data de click info', data)
-		)
+	const handleProfile = () => {
+		console.log('click')
+		localStorage.getItem('token')? navigate('/private') : navigate('/login')
 	}
 
 	return (
 		<div className="text-center mt-5">
-			<h2>First register or login</h2>
-			<Register />
-			<Login />
-			<h2>then</h2>
-			<button onClick={handleClick}>Get your info after login/registering</button>
-			{store.user && <Private />}
+			<h2>Welcome, go to <Link to={'/register'}>Register</Link> if you are new, else <Link to={'/login'}>Login</Link>
+			Or you can go to your <span className="nav nav-link pointer" onClick={handleProfile}>Profile!</span>
+			</h2>
 		</div>
 	);
 }; 

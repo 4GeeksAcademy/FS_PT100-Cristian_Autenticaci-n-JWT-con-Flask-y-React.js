@@ -1,12 +1,8 @@
-import { Link } from "react-router-dom"
-import { Login } from "../components/login"
+import { Private } from "../components/private"
 
-export const LoginPage = () => {
+export const PrivatePage = () => {
 
-    return (
-        <>
-        <Login/>
-        <Link to='/register'>Need an account?</Link>
-        </>
+    return(
+        <Private/>
     )
 }
