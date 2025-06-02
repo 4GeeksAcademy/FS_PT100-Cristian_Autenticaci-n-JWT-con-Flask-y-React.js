@@ -1,11 +1,5 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import { Register } from "../components/register.jsx";
-import { Login } from "../components/login.jsx";
-import { Private } from "../components/private.jsx";
-import userServices from "../services/userServices.js";
 
 export const Home = () => {
 	const navigate = useNavigate();
@@ -26,4 +20,4 @@ export const Home = () => {
 			</h2>
 		</div>
 	);
-};
+}; 

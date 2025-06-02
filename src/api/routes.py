@@ -7,6 +7,7 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from werkzeug.security import generate_password_hash, check_password_hash
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
@@ -40,11 +41,12 @@ def register():
         existing_user = db.session.execute(stm).scalar_one_or_none()
         if existing_user:
             raise Exception({"error": 'email taken, try logging in'})
-
+        
+        hashed_password = generate_password_hash(data['password'])
 # creamos el nuevo usuario
         new_user = User(
             email=data['email'],
-            password=data['password'],
+            password=hashed_password,
             is_active=True
         )
 
@@ -58,12 +60,12 @@ def register():
         token = create_access_token(identity=new_user.id)
 
 # retornamos informacion
-        return jsonify({"msg": "register, ok", "token": token}), 201
+        return jsonify({"msg": "register ok, now login!", "success": True}), 201
 
     except Exception as e:
         print(e)
-        db.sesion.rollback()
-        return jsonify({"error": "something went wrong"}), 400
+        db.session.rollback()
+        return jsonify({"error": "something went wrong", "success": False}), 400
 
 
 @api.route('/login', methods=['POST'])
@@ -86,17 +88,15 @@ def login():
 
 # verificar email y password
         if (user.password != data['password']):
-            raise Exception({"error": 'worng email and password'})
+            raise Exception({"error": 'wrong email/password'})
 
-# generar token
-        token = create_access_token(identity=user.id)
-
+        token = create_access_token(identity=str(user.id))
 # retornamos informacion
-        return jsonify({"msg": "login, ok", "token": token}), 200
+        return jsonify({"msg": "login ok", "token": token,  "success": True}), 200
 
     except Exception as e:
         print(e)
-        db.sesion.rollback()
+        db.session.rollback()
         return jsonify({"error": "something went wrong"}), 400
 
 # ruta protegida

@@ -12,7 +12,6 @@ userServices.register = async (formData) => {
     });
     if (!resp.ok) throw Error("something went wrong");
     const data = await resp.json();
-    localStorage.setItem("token", data.token)
     return data;
   } catch (error) {
     console.log(error);
