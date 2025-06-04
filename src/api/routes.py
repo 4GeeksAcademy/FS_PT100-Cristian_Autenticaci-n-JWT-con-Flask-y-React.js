@@ -42,13 +42,13 @@ def register():
         if existing_user:
             raise Exception({"error": 'email taken, try logging in'})
         
-        hashed_password = generate_password_hash(data['password'])
+        # hashed_password = generate_password_hash(data['password'])
 # creamos el nuevo usuario
         new_user = User(
             email=data['email'],
             password=hashed_password,
             is_active=True
-        )
+        ) 
 
 # añadimos a la base de datos
         db.session.add(new_user)
@@ -57,10 +57,10 @@ def register():
         db.session.commit()
 
 # generar token
-        token = create_access_token(identity=new_user.id)
+        token = create_access_token(identity=str(new_user.id))
 
 # retornamos informacion
-        return jsonify({"msg": "register ok, now login!", "success": True}), 201
+        return jsonify({"msg": "register ok", "token": token}), 201
 
     except Exception as e:
         print(e)
