@@ -23,44 +23,34 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-
 @api.route('/register', methods=['POST'])
 def register():
     try:
-     # extraemos la info del cuerpo
         data = request.json
 
-# tengo que tener el email o la contraseña
         if not data['email'] or not data['password']:
             raise Exception({"error": 'missing data'})
 
-# encontrar usuario
         stm = select(User).where(User.email == data['email'])
 
-# para saber si tengo el usuario registrado en la base de datos
         existing_user = db.session.execute(stm).scalar_one_or_none()
         if existing_user:
             raise Exception({"error": 'email taken, try logging in'})
         
-        # hashed_password = generate_password_hash(data['password'])
-# creamos el nuevo usuario
+        hashed_password = generate_password_hash(data['password'])
+
         new_user = User(
             email=data['email'],
             password=hashed_password,
             is_active=True
         ) 
 
-# añadimos a la base de datos
         db.session.add(new_user)
-
-# almacenamos a la base de datos
         db.session.commit()
 
-# generar token
         token = create_access_token(identity=str(new_user.id))
 
-# retornamos informacion
-        return jsonify({"msg": "register ok", "token": token}), 201
+        return jsonify({"msg": "register ok", "token": token, "success": True}), 201
 
     except Exception as e:
         print(e)
@@ -71,27 +61,24 @@ def register():
 @api.route('/login', methods=['POST'])
 def login():
     try:
-     # extraemos la info del cuerpo
         data = request.json
 
-# tengo que tener el email o la contraseña
         if not data['email'] or not data['password']:
             raise Exception({"error": 'missing data'})
 
-# encontrar usuario
         stm = select(User).where(User.email == data['email'])
 
-# para saber si tengo el usuario registrado en la base de datos
         user = db.session.execute(stm).scalar_one_or_none()
         if not user:
             raise Exception({"error": 'email not found'})
 
-# verificar email y password
-        if (user.password != data['password']):
-            raise Exception({"error": 'wrong email/password'})
-
+        # if (user.password != data['password']):
+        #     raise Exception({"error": 'wrong email/password'})
+        if not check_password_hash(user.password, data['password']):
+            return jsonify({"success": False, 'msg': 'email/password wrong'})
+        
         token = create_access_token(identity=str(user.id))
-# retornamos informacion
+
         return jsonify({"msg": "login ok", "token": token,  "success": True}), 200
 
     except Exception as e:
