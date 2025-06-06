@@ -29,13 +29,13 @@ def register():
         data = request.json
 
         if not data['email'] or not data['password']:
-            raise Exception({"error": 'missing data'})
+            return jsonify({"error": 'missing data'})
 
         stm = select(User).where(User.email == data['email'])
 
         existing_user = db.session.execute(stm).scalar_one_or_none()
         if existing_user:
-            raise Exception({"error": 'email taken, try logging in'})
+            return jsonify({"error": 'email taken, try logging in'})
         
         hashed_password = generate_password_hash(data['password'])
 
@@ -72,8 +72,6 @@ def login():
         if not user:
             raise Exception({"error": 'email not found'})
 
-        # if (user.password != data['password']):
-        #     raise Exception({"error": 'wrong email/password'})
         if not check_password_hash(user.password, data['password']):
             return jsonify({"success": False, 'msg': 'email/password wrong'})
         

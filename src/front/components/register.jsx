@@ -18,7 +18,6 @@ export const Register = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log(formData)
         userServices.register(formData).then(data => data.success && navigate('/login'))
     }
 

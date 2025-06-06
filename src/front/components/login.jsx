@@ -18,8 +18,7 @@ export const Login = () => {
     const navigate = useNavigate()
 
     const handleSubmit = e => {
-        e.preventDefauld();
-        console.log(formData);
+        e.preventDefault();
         userServices.login(formData).then(data => data.success && navigate('/private'))
     }
 
